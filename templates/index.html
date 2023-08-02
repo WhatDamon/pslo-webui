@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>伪本地化演示</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+    <link rel="preconnect" href="https://fonts.font.im">
+    <link href="https://fonts.font.im/css2?family=Noto+Sans+SC" rel="stylesheet">
+    <link rel="icon" href="favicon.png" type="image/x-icon">
+</head>
+
+<style type="text/css">
+    body {
+        font-family: 'Noto Sans SC', tahoma, arial, 'Hiragino Sans GB', '\5b8b\4f53', sans-serif;
+    }
+
+    .box_pd {
+        margin: 15px;
+    }
+
+    .img_aligh_right {
+        float: right;
+        margin: 15px;
+    }
+</style>
+
+<body>
+    <!--顶栏-->
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand"><i class="bi bi-globe"></i> 伪本地化演示</a>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../">
+                            <i class="bi bi-arrow-return-left"></i> 返回主页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://github.com/suntrise/Pseudo-localization-Demo/releases">
+                            <i class="bi bi-download"></i> 本地版</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                            <i class="bi bi-database-check"></i> 数据集</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://github.com/suntrise/pseudo">
+                            <i class="bi bi-github"></i> 项目主页</a>
+                    </li>
+            </div>
+        </div>
+    </nav>
+
+    <!--数据集弹窗-->
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">数据集</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <b>Working hard...</b>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--伪本地化-->
+    <section>
+        <h4 class="box_pd"><i class="bi bi-translate"></i> 伪本地化</h4>
+        <form action="/" method="POST">
+            <!--输入输出-->
+            <div class="box_pd">
+
+                <div class="input-group">
+                    <span class="input-group-text">原文</span>
+                    <textarea class="form-control" placeholder="在这里输入要翻译的内容~" aria-label="With textarea"
+                        name="pstype">{{ pstype_input }}</textarea>
+                </div>
+
+            </div>
+            <div class="box_pd">
+                <div class="input-group">
+                    <span class="input-group-text">译文</span>
+                    <textarea class="form-control" placeholder="结果会显示在这里" aria-label="With textarea"
+                        readonly="true">{{ pslo_result }}</textarea>
+                </div>
+            </div>
+
+            <!--控制按钮-->
+            <div class="box_pd">
+                <div class="btn-group" role="group" aria-label="control_btns">
+                    <button type="submit" class="btn btn-primary" id="pslo"><i class="bi bi-translate"></i>
+                        进行伪本地化!</button>
+                    <button type="button" class="btn btn-primary" id="copy"><i class="bi bi-clipboard"></i></button>
+                </div>
+                <button type="button" class="btn btn-secondary " data-bs-toggle="collapse" data-bs-target="#history"
+                    aria-expanded="false" aria-controls="history"><i class="bi bi-clock-history"></i> 历史记录</button>
+            </div>
+        </form>
+
+        <!--历史记录-->
+        <div class="box_pd">
+            <div class="collapse" id="history">
+                <div class="card card-body">
+                    {{ history }}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <hr />
+
+    <!--设置-->
+    <section>
+        <h4 class="box_pd"><i class="bi bi-gear"></i> 设置</h4>
+        <!--enXAB选择-->
+        <div class="box_pd">
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="en-XA" id="enxa" checked>
+                <label class="form-check-label" for="enxa">
+                    en-XA (qps-ploc) (e.g. ab→ǻƀ)
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="en-XB" id="enxb">
+                <label class="form-check-label" for="enxb">
+                    en-XB (qps-plocm) (e.g. ab→ba)
+                </label>
+            </div>
+        </div>
+        <!--前后缀-->
+        <div class="box_pd">
+            <div class="suf_way_dd">
+                <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    选择前后缀方案，默认为“不添加前后缀”
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">不添加前后缀</a></li>
+                    <li><a class="dropdown-item" href="#">[中括号+感叹号括起来 (微软式伪本地化)!!!]</a></li>
+                    <li><a class="dropdown-item" href="#">[中括号+在语段后添加英文基数词 (安卓式伪本地化) one two three]</a></li>
+                    <li><a class="dropdown-item" href="#">[中括号+在语段后添加阿拉伯数字 12345]</a></li>
+                    <li><a class="dropdown-item" href="#">自定义前后缀</a></li>
+                </ul>
+            </div>
+        </div>
+        {% if suf_way == "4"%}
+        <div class="box_pd">
+            <div class="input-group mb-3">
+                <span class="input-group-text">前缀</span>
+                <input type="text" class="form-control" placeholder="[" aria-label="front" value="[">
+                <span class="input-group-text">后缀</span>
+                <input type="text" class="form-control" placeholder="]" aria-label="back" value="]">
+                <span class="input-group-text">语段后重复添加</span>
+                <input type="text" class="form-control" placeholder="内容" aria-label="after_text">
+                <span class="input-group-text">每个多少个字符重复一次</span>
+                <input type="text" class="form-control" placeholder="7" aria-label="num_af"
+                    oninput="value=value.replace(/[^\d]/g,'')" value="7">
+            </div>
+        </div>
+        {% endif %}
+        <!--其他选项-->
+        <div class="box_pd">
+            <div class="input-group mb-3">
+                <div class="input-group-text">
+                    <input class="form-check-input mt-0" type="checkbox" value="" aria-label="hashid_add">
+                </div>
+                <span class="input-group-text">[Abc12]添加伪 Hash ID (资源标识符)(由一定位数的字母+数字所构成的字符串)</span>
+                <input type="text" class="form-control" aria-label="hashidws" placeholder="5"
+                    oninput="value=value.replace(/[^\d]/g,'')" value="5">
+            </div>
+        </div>
+        <div class="box_pd">
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="vo_re">重复元音次数(0代表不重复, 1代表双写, 以此类推): </span>
+                <input type="text" class="form-control" aria-describedby="vo_re"
+                    oninput="value=value.replace(/[^\d]/g,'')" value="0">
+            </div>
+        </div>
+        <div class="box_pd">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="hide_ctl">
+                <label class="form-check-label" for="hide_ctl">
+                    翻译后隐藏%s, \n, \r等控制字符
+                </label>
+            </div>
+        </div>
+    </section>
+
+    <hr />
+
+    <!--帮助-->
+    <section>
+        <h4 class="box_pd"><i class="bi bi-patch-question"></i> 帮助</h4>
+
+        <div class="box_pd">
+            <div class="accordion" id="accordion_box">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="flush-headingOne">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                            什么是伪本地化?
+                        </button>
+                    </h2>
+                    <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne"
+                        data-bs-parent="#accordionFlushExample">
+                        <div class="accordion-body">
+                            <p>伪本地化(pseudo-localization, 语言环境 <strong>qps-ploc, qps-plocm, qps-ploca, en-XA,
+                                    en-XB</strong>),
+                            </p>
+                            <p>是通过模拟本地化过程, 以有效地调查在本地化中出现的问题</p>
+                            <p><em>(如字符无法正常显示, 或因字符串过长而导致语段显示不完整等)</em>。</p>
+                            <p>在伪本地化过程中, 英文字母会被替换为来自其他语言的重音符号和字符。</p>
+                            <p><em>(例如, 字母 a 可以被 <strong>αäáàāāǎǎăăåå</strong> 中的任何一个替换)</em>,</p>
+                            <p>还会添加分隔符等以增加字符串长度。</p>
+                            <p>例: “Windows Photo Gallery (Windows 照片库)”→“ [1iaT9][ Ẅĭпðøωś Þнôтŏ Ģάŀļєяÿ !!! !] ”</p>
+                            <h5>更多信息:</h5>
+                            <ul>
+                                <li><a href='https://docs.microsoft.com/zh-cn/globalization/methodology/pseudolocalization'
+                                        target='_blank'
+                                        class='url'>https://docs.microsoft.com/zh-cn/globalization/methodology/pseudolocalization</a>
+                                </li>
+                                <li><a href='https://zhuanlan.zhihu.com/p/613293858' target='_blank'
+                                        class='url'>https://zhuanlan.zhihu.com/p/613293858</a>
+                                </li>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="flush-headingTwo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+                            关于
+                        </button>
+                    </h2>
+                    <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo"
+                        data-bs-parent="#accordionFlushExample">
+                        <div class="accordion-body">
+                            <h5>伪本地化演示 v6.0</h5>
+                            <p><b>Made with Bootstrap</b>, 由SUNTRISE发起</p>
+                            <p>开发者: SUNTRISE, What_Damon</p>
+                            <p>使用到了Python Flask</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <img class="img_aligh_right" src="https://badges.toozhao.com/badges/01GGFBWDY0MAKM9FJNVQGK5WDD/blue.svg">
+</body>
+
+</html>
